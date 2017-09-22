@@ -1,5 +1,6 @@
 // 자바 관련 빌드 명령을 사용하기 위해 Gradle plugin 추가
 apply plugin: 'java'
+apply plugin: 'war'
 
 // 이클립스 관련 설정 파일을 만들어주는 Gradle plugin 추가
 apply plugin: 'eclipse'

@@ -1,4 +1,4 @@
-package project_1;
+package project_1.etc;
 
 public class LinkedList<T> {
 	Box<T> head;

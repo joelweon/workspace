@@ -1,4 +1,4 @@
-package project_1;
+package project_1.etc;
 
 import java.io.File;
 import java.net.ServerSocket;
