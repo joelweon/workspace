@@ -3,12 +3,17 @@ package project_1;
 import java.util.Scanner;
 
 public class StudentController {
+  private LinkedList<Student> list;
+  private Scanner scan;
+  
   Student[] students = new Student[100];
-  int length = 0;
-  Scanner scan;
+
+  public StudentController(Scanner scan) {
+    list = new LinkedList<Student>();
+    this.scan = scan;
+  }
   
   public void service() {
-    
     loop:
     while(true) {
       System.out.print("Student Mng > ");
@@ -31,21 +36,9 @@ public class StudentController {
     }
   }
   
-  
-  
-  
-  public StudentController(Scanner scan) {
-    this.scan = scan;
-  }
-  
   private void doList() {
-    if (students[0] == null) {
-      System.out.println("데이터가 없습니다.");
-      return;
-    }
-    for (int i = 0; i < this.length; i++) {
-      Student student = this.students[i];
-      
+    for (int i = 0; i < list.size(); i++) {
+      Student student = list.get(i);
       System.out.printf("%s,%s,%s,%s,%s,%s,%d,%s\n",
           student.userId,
           student.password,
@@ -59,7 +52,7 @@ public class StudentController {
   }
   
   private void doAdd() {
-    while(length < students.length) {
+    while(true) {
       Student student = new Student();
       
       System.out.println("아이디? ");
@@ -86,9 +79,9 @@ public class StudentController {
       System.out.print("최종학교(예:고등학교)? ");
       student.setSchool(scan.nextLine());
     
-      students[length++] = student;
+      list.add(student);
       
-      System.out.println("계속입력: ");
+      System.out.println("계속입력? ");
       if(!"y".equals(scan.nextLine())) {
         break;
       }
@@ -96,77 +89,64 @@ public class StudentController {
   }
   
   private void doView() {
-    System.out.print("조회할 ID? ");
+    System.out.print("조회할 인덱스? ");
     
-    String id = scan.nextLine().toLowerCase();
+    int index = Integer.parseInt(scan.nextLine());
     
-    for (int i = 0; i < this.length; i++) {
-      if (id.equals(students[i].userId.toLowerCase())) {
-        System.out.printf("아이디: %s\n", this.students[i].userId);
-        System.out.printf("암호: (***)\n");
-        System.out.printf("이름: %s\n", this.students[i].name);
-        System.out.printf("전화: %s\n", this.students[i].tel);
-        System.out.printf("이메일: %s\n", this.students[i].email);
-        System.out.printf("재직중: %s\n", (this.students[i].working) ? "Yes" : "No");
-        System.out.printf("태어난 해: %d\n", this.students[i].birthYear);
-        System.out.printf("학교: %s\n", this.students[i].school);
-        return;
-      }
-    }
-    System.out.println("존재X");
+    Student student = list.get(index);
+    
+    System.out.printf("아이디: %s\n", student.userId);
+    System.out.printf("암호: (***)\n");
+    System.out.printf("이름: %s\n", student.name);
+    System.out.printf("전화: %s\n", student.tel);
+    System.out.printf("이메일: %s\n", student.email);
+    System.out.printf("재직중: %s\n", (student.working) ? "Yes" : "No");
+    System.out.printf("태어난 해: %d\n", student.birthYear);
+    System.out.printf("학교: %s\n", student.school);
   }
   
   private void doDelete() {
-    System.out.print("삭제할 ID? ");
-    String id = scan.nextLine().toLowerCase();
+    System.out.print("삭제할 인덱스? ");
+
+    int index = Integer.parseInt(scan.nextLine());
     
-    for (int i = 0; i < this.length; i++) {
-      if (id.equals(students[i].userId.toLowerCase())) {
-        for (int j = i+1; j < this.length; j++) {
-          students[i] = students[j];
-        }
-        students[--length] = null;
-        return;
-      }
-    }
-    System.out.println("존재X");
+    Student deleteStudent = (Student)list.remove(index);
+    
+    System.out.println(deleteStudent.userId + " 삭제완료!");
   }
   
   private void doUpdate() {
-    System.out.print("변경할 ID? ");
+    System.out.print("변경할 학생의 인덱스? ");
     
-    String id = scan.nextLine().toLowerCase();
+    int index = Integer.parseInt(this.scan.nextLine());
     
-    for (int i = 0; i < this.length; i++) {
-      if (id.equals(students[i].userId.toLowerCase())) {
-        Student student = new Student();
-        student.userId = students[i].userId;
-        System.out.printf("암호: ");
-        student.password = scan.nextLine();
-        System.out.printf("이름: ");
-        student.name = scan.nextLine();
-        System.out.printf("전화: ");
-        student.tel = scan.nextLine();
-        System.out.printf("이메일: ");
-        student.email = scan.nextLine();
-        System.out.printf("재직중: ");
-        student.working = (scan.nextLine().toLowerCase().equals("y")) ? true : false;
-        System.out.printf("태어난 해: ");
-        student.birthYear = Integer.parseInt(scan.nextLine());
-        System.out.printf("학교: ");
-        student.school = scan.nextLine();
+    Student oldStudent = list.get(index);
+    
+    Student student = new Student();
+    
+    System.out.printf("암호: ");
+    student.password = scan.nextLine();
+    System.out.printf("이름: ");
+    student.name = scan.nextLine();
+    System.out.printf("전화: ");
+    student.tel = scan.nextLine();
+    System.out.printf("이메일: ");
+    student.email = scan.nextLine();
+    System.out.printf("재직중: ");
+    student.working = (scan.nextLine().toLowerCase().equals("y")) ? true : false;
+    System.out.printf("태어난 해: ");
+    student.birthYear = Integer.parseInt(scan.nextLine());
+    System.out.printf("학교: ");
+    student.school = scan.nextLine();
         
-        System.out.println("저장? ");
-        if ("y".equals(scan.nextLine().toLowerCase())) {
-          students[i] = student;
-          System.out.println("변경완료!");
-        } else {
-          System.out.println("변경취소!");
-        }
-        return;
-      }
+    System.out.println("저장? ");
+    if ("y".equals(scan.nextLine().toLowerCase())) {
+      student.userId = oldStudent.userId;
+      list.set(index, student);
+      System.out.println("변경완료!");
+    } else {
+      System.out.println("변경취소!");
     }
-    System.out.println("존재X");
   }
 
 }
